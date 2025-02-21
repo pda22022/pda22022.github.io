@@ -16,7 +16,7 @@
   <body>
     <a-scene id="s1" background="color: cadetblue" cursor+"rayOrigin: mouse">
       <a-plane static-body height="100" width="100" rotation="-90 0 0"></a-plane>
-      <a-camera><a-camera fuse="tue" fuse-timeout="5000"></a-camera></a-camera>
+      <a-camera><a-camera fuse="true" fuse-timeout="5000"></a-camera></a-camera>
       <a-entity camera cursor raycaster="showLine: true" oculus-touch-controls="hand: right">
         </a-entity>
     </a-scene>
@@ -26,6 +26,7 @@
         var e = i % 2, o = !e;
         for (var j = 0; j < 5; j++) { 
           var box = document.createElement('a-box');
+          box.setAttribute('removing', '');
           box.setAttribute('dynamic-body', '');
           box.setAttribute('position', e * (j - 2) + ' ' + (i + 0.5) + ' ' + (-12 - (j - 2) * o));
           box.setAttribute('color', 'firebrick');
