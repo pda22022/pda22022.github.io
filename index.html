@@ -2,13 +2,22 @@
   <head>
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-physics-system@v4.2.2/dist/aframe-physics-system.min.js"></script>
+   <script>
+     AFRAME.registerComponent('removing',{
+       init: function () {
+         var el = this.el;
+         el.addEventListener('mouseenter', function () { el.setAttribute('color', 'red'); });
+           el.addEventListener('mouseleave', function () { el.setAttribute('color', 'firebrick'); });
+            el.addEventListener('click', function () { el.remove(); });
+       }
+     });
+   </script>
   </head>
   <body>
-    <a-scene id="s1" background="color: cadetblue" physics>
+    <a-scene id="s1" background="color: cadetblue" cursor+"ray0rigin: mouse">
       <a-plane static-body height="100" width="100" rotation="-90 0 0"></a-plane>
-      <a-entity camera look-controls wasd-controls position="0 1.6 0">
-      <a-sphere static-body position="0 -1 -1" scale="0.5 0.5 0.5" color="gray"></a-sphere>
-       <a-sphere static-body position="0 -0.25 -1" scale="0.25 0.25 0.25" color="black"></a-sphere>
+      <a-camera><a-camera fuse="tue" fuse-timeout="5000></a-camera></a-camera>
+      <a-entity camera cursor raycaster="showLine: true" oculus-touch-controls="hand: right">
         </a-entity>
     </a-scene>
     <script>
