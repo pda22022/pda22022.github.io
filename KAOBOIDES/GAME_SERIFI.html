@@ -29,8 +29,10 @@
  <hr />
       <div align="center">
       <a-scene cursor="rayOrigin: mouse" background="color:PowderBlue" ondblclick="this.requestFullscreen();" embedded>
+      <a-sphere radius="500" position="0 5000 0" material="fog: false"></a-sphere>
         <a-entity id="prisoner" fbx-model="src:url(Dying.fbx)" position="300 -150 -300"
             animation-mixer="loop: once; clampWhenFinished: true; timeScale: 0" testing></a-entity>
+            <a-light type="ambient" intensity="0.25"></a-light>
             <a-plane color="Goldenrod" static-body height="1000" width="1000" rotation="-90 0 0"></a-plane>
     </a-scene>
 
