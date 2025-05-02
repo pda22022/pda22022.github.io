@@ -41,14 +41,14 @@
             <a_asset-item id="bank" src="old_western_bank_with_interior_low_poly.glb"></a_asset-item>
             <a_asset-item id="watertower" src="low_poly_western_watertower.glb"></a_asset-item>
             <a_asset-item id="church"  src="western_church_-_mobile_gameready.glb"></a_asset-item>
-            <a_asset-item id="#tree"  src="tree.glb"></a_asset-item>
+            <a_asset-item id="tree"  src="tree.glb"></a_asset-item>
       </a_assets>
             <a-entity gltf-model="#bank" scale="2 2 2" position="-1 -0.4 -20"></a-entity>
             <a-entity gltf-model="#watertower" scale="2 3 2" position="25 57 -20"></a-entity>
             <a-entity gltf-model="#church" scale="2 2 2" position="-60 1.1 20" rotation="0 -180 0"></a-entity>
       </a-scene>
 <script>
-      var scene1 = document.getElementById('s1');
+      var scene1 = document.querySelector('scene');
     for (var i = 0; i < 10; i++) {
     var tree = document.createElement('a-entity');
     var x = Math.random() * 80 - 40;
