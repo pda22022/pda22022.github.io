@@ -2,7 +2,6 @@
 <head>
       <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
       <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/aframe-physics-system@4.0.1/dist/aframe-physics-system.min.js"></script>
 <script>
         AFRAME.registerComponent('testing', {
             init: function () {
@@ -36,26 +35,26 @@
               shadowCameraBottom: -500; shadowCameraTop: 500; shadowCameraLeft: -500; shadowCameraRight: 500">
 
        <a-assets>
-          <a-entity gltf-model="#bank" scale="2 2 2" position="-1 -0.4 -20" static-body></a-entity>
-          <a-entity gltf-model="#tobacco" scale="2 2 2" position="-20 0.5 -20" rotation="0 90 0" static-body></a-entity>
-          <a-entity gltf-model="#watertower" scale="2 3 2" position="25 57 -20" static-body></a-entity>
-          <a-entity gltf-model="#church" scale="2 2 2" position="-60 0.9 20" rotation="0 -180 0" static-body></a-entity>
-          <a-entity gltf-model="#building" scale="50 50 50" position="-15 0.9 20" rotation="0 -180 0" static-body></a-entity>
-          <a-entity gltf-model="cowboy.glb" position="0 0 -5" scale="1 1 1" static-body></a-entity>
+          <a-entity gltf-model="#bank" scale="2 2 2" position="-1 -0.4 -20" ></a-entity>
+          <a-entity gltf-model="#tobacco" scale="2 2 2" position="-20 0.5 -20" rotation="0 90 0" ></a-entity>
+          <a-entity gltf-model="#watertower" scale="2 3 2" position="25 57 -20" ></a-entity>
+          <a-entity gltf-model="#church" scale="2 2 2" position="-60 0.9 20" rotation="0 -180 0" ></a-entity>
+          <a-entity gltf-model="#building" scale="50 50 50" position="-15 0.9 20" rotation="0 -180 0" ></a-entity>
+          <a-entity gltf-model="cowboy.glb" position="0 0 -5" scale="1 1 1" ></a-entity>
 
       </a-assets>
-           <a-entity gltf-model="#bank" scale="2 2 2" position="-1 -0.4 -20" static-body></a-entity>
-           <a-entity gltf-model="#tobacco" scale="2 2 2" position="-20 -0.4 -20" rotation="0 0 0" static-body></a-entity>
-           <a-entity gltf-model="#watertower" scale="2 3 2" position="25 57 -20" static-body></a-entity>
-           <a-entity gltf-model="#church" scale="2 2 2" position="-60 0.6 20" rotation="0 -180 0" static-body></a-entity>
-           <a-entity gltf-model="#building" scale="35 35 35" position="-15 0.4 20" rotation="0 -180 0" static-body></a-entity>
-           <a-entity gltf-model="cowboy.glb" position="0 0 -5" scale="1 1 1" static-body></a-entity>
+           <a-entity gltf-model="#bank" scale="2 2 2" position="-1 -0.4 -20" ></a-entity>
+           <a-entity gltf-model="#tobacco" scale="2 2 2" position="-20 -0.4 -20" rotation="0 0 0" ></a-entity>
+           <a-entity gltf-model="#watertower" scale="2 3 2" position="25 57 -20" ></a-entity>
+           <a-entity gltf-model="#church" scale="2 2 2" position="-60 0.6 20" rotation="0 -180 0"></a-entity>
+           <a-entity gltf-model="#building" scale="35 35 35" position="-15 0.4 20" rotation="0 -180 0" ></a-entity>
+           <a-entity gltf-model="cowboy.glb" position="0 0 -5" scale="1 1 1" ></a-entity>
       </a-scene>
         
 
 <script>
  var scene1 = document.querySelector('a-scene');
-  var treeCount = 10; 
+  var treeCount = 20; 
   var innerRadius = 60;
   var outerRadius = 40; 
   for (var i = 0; i < treeCount; i++) {
@@ -71,7 +70,7 @@
     tree.setAttribute('scale', `${s} ${s} ${s}`);
     tree.setAttribute('rotation', `0 ${r} 0`);
     tree.setAttribute('shadow', 'receive: false');
-    tree.setAttribute('static-body', '');
+    
         
     scene1.appendChild(tree);
   }
