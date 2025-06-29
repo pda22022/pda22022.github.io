@@ -28,8 +28,9 @@
   <p><strong>Σενάριο:</strong>...</p>
   <hr />
   <div align="center">
-    <a-scene cursor="rayOrigin: mouse" background="color:PowderBlue" ondblclick="this.requestFullscreen();" embedded> 
-      <a-entity id="rig" movement-controls dynamic-body>
+    <a-scene cursor="rayOrigin: mouse" background="color:PowderBlue" ondblclick="this.requestFullscreen();" embedded physics="gravity: -9.8">
+      <!-- Rig με φυσική -->
+      <a-entity id="rig" movement-controls dynamic-body="shape: capsule; mass: 5">
         <a-camera>
           <a-cursor fuse="true" fuse-timeout="5000"></a-cursor>
         </a-camera>
@@ -42,7 +43,7 @@
       </a-entity>
 
       <a-light type="ambient" intensity="0.25"></a-light>
-      <a-plane color="PaleGoldenrod" static-body height="1000" width="1000" rotation="-90 0 0"></a-plane>
+      <a-plane color="PaleGoldenrod" static-body="shape: box" height="1000" width="1000" rotation="-90 0 0"></a-plane>
 
       <a-assets>
         <a-asset-item id="bank" src="western_bank.glb"></a-asset-item>
@@ -54,12 +55,13 @@
         <a-asset-item id="cowboy" src="cowboy.glb"></a-asset-item>
       </a-assets>
 
-      <a-entity gltf-model="#bank" scale="2 2 2" position="-1 -0.4 -20" static-body></a-entity>
-      <a-entity gltf-model="#tobacco" scale="2 2 2" position="-20 -0.4 -20" rotation="0 0 0" static-body></a-entity>
-      <a-entity gltf-model="#watertower" scale="2 3 2" position="25 57 -20" static-body></a-entity>
-      <a-entity gltf-model="#church" scale="2 2 2" position="-60 0.6 20" rotation="0 -180 0" static-body></a-entity>
-      <a-entity gltf-model="#building" scale="35 35 35" position="-15 0.4 20" rotation="0 -180 0" static-body></a-entity>
-      <a-entity gltf-model="cowboy.glb" position="0 0 -5" scale="1 1 1" static-body></a-entity>
+      <!-- Στερεά κτίρια με box collisions -->
+      <a-entity gltf-model="#bank" scale="2 2 2" position="-1 -0.4 -20" static-body="shape: box"></a-entity>
+      <a-entity gltf-model="#tobacco" scale="2 2 2" position="-20 -0.4 -20" rotation="0 0 0" static-body="shape: box"></a-entity>
+      <a-entity gltf-model="#watertower" scale="2 3 2" position="25 57 -20" static-body="shape: box"></a-entity>
+      <a-entity gltf-model="#church" scale="2 2 2" position="-60 0.6 20" rotation="0 -180 0" static-body="shape: box"></a-entity>
+      <a-entity gltf-model="#building" scale="35 35 35" position="-15 0.4 20" rotation="0 -180 0" static-body="shape: box"></a-entity>
+      <a-entity gltf-model="cowboy.glb" position="0 0 -5" scale="1 1 1" static-body="shape: box"></a-entity>
 
     </a-scene>
   </div>
@@ -67,8 +69,8 @@
   <script>
     var scene1 = document.querySelector('a-scene');
     var treeCount = 10; 
-    var innerRadius = 40; // κεντρικός άδειος κύκλος
-    var outerRadius = 60; // δέντρα γύρω γύρω
+    var innerRadius = 40;
+    var outerRadius = 60;
 
     for (var i = 0; i < treeCount; i++) {
       var tree = document.createElement('a-entity');
@@ -84,7 +86,7 @@
       tree.setAttribute('scale', `${s} ${s} ${s}`);
       tree.setAttribute('rotation', `0 ${r} 0`);
       tree.setAttribute('shadow', 'receive: false');
-      tree.setAttribute('static-body', '');  // Προστέθηκε φυσική σύγκρουση
+      tree.setAttribute('static-body', 'shape: box');
 
       scene1.appendChild(tree);
     }
@@ -97,3 +99,4 @@
 
 </body>
 </html>
+
