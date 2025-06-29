@@ -37,16 +37,19 @@
       </a-entity>
             <a-light type="ambient" intensity="0.25"></a-light>
             <a-plane color="PaleGoldenrod" static-body height="1000" width="1000" rotation="-90 0 0"></a-plane>
-      <a_assets>
-            <a_asset-item id="bank" src="old_western_bank_with_interior_low_poly.glb"></a_asset-item>
-            <a_asset-item id="watertower" src="low_poly_western_watertower.glb"></a_asset-item>
-            <a_asset-item id="church"  src="western_church_-_mobile_gameready.glb"></a_asset-item>
-            <a_asset-item id="tree"  src="tree.glb"></a_asset-item>
-      </a_assets>
+      <a-assets>
+            <a-asset-item id="bank" src="old_western_bank_with_interior_low_poly.glb"></a-asset-item>
+            <a-asset-item id="watertower" src="low_poly_western_watertower.glb"></a-asset-item>
+            <a-asset-item id="church"  src="western_church_-_mobile_gameready.glb"></a-asset-item>
+            <a-asset-item id="tree"  src="tree.glb"></a-asset-item>
+            <a-asset-item id="cowboy" src="cowboy.glb"></a-asset-item>
+      </a-assets>
             <a-entity gltf-model="#bank" scale="2 2 2" position="-1 -0.4 -20"></a-entity>
             <a-entity gltf-model="#watertower" scale="2 3 2" position="25 57 -20"></a-entity>
             <a-entity gltf-model="#church" scale="2 2 2" position="-60 1.1 20" rotation="0 -180 0"></a-entity>
+            <a-entity gltf-model="cowboy.glb" position="0 0 -5" scale="1 1 1"></a-entity>
       </a-scene>
+            
 <script>
       var scene1 = document.querySelector('a-scene');
     for (var i = 0; i < 10; i++) {
