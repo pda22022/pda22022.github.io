@@ -4,13 +4,13 @@
   <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
 
   <style>
-    h1 { text-align: center; }
-    h3 { text-align: center; }
-    a-scene { width: 50%; height: 50%; border: dotted red 3px; }
+    body { margin: 0; }
+    h1, h3 { text-align: center; }
+    a-scene { width: 100%; height: 90vh; border: dotted red 2px; }
   </style>
 
   <script>
-    // Shooter component για πυροβολισμό με click
+    // Component: laser shooting logic
     AFRAME.registerComponent('shooter', {
       init: function () {
         const scene = this.el;
@@ -23,104 +23,69 @@
           targets.forEach(target => {
             const intersection = cursor.components.raycaster.getIntersection(target);
             if (intersection) {
-              // Εκτελεί το animation (σαν να "πέφτει")
+              // Trigger fall animation
               target.emit('shoot');
 
-              // Δημιουργεί laser γραμμή
-              const line = document.createElement('a-entity');
-              line.setAttribute('line', {
-                start: '0 0 0',
-                end: `${intersection.point.x} ${intersection.point.y} ${intersection.point.z}`,
-                color: 'yellow'
-              });
-              line.setAttribute('position', '0 1.6 0'); // θέση κάμερας
-              scene.appendChild(line);
+              // Create yellow laser beam (thin box)
+              const laser = document.createElement('a-box');
+              laser.setAttribute('position', '0 1.6 0');
+              laser.setAttribute('depth', '0.1');
+              laser.setAttribute('height', '0.05');
+              laser.setAttribute('width', '5');
+              laser.setAttribute('color', 'yellow');
+              laser.setAttribute('rotation', '0 0 0');
+              scene.appendChild(laser);
 
-              // Σβήνει μετά από 0.2 δευτερόλεπτα
-              setTimeout(() => scene.removeChild(line), 200);
+              // Remove laser after 2 seconds
+              setTimeout(() => scene.removeChild(laser), 2000);
             }
           });
         });
       }
     });
   </script>
-
 </head>
 
 <body>
   <h1>ΤΙΤΛΟΣ ΕΡΓΑΣΙΑΣ</h1>
   <h3>Ονοματεπώνυμο</h3>
   <hr />
-  <p><strong>Σενάριο:</strong>...</p>
+  <p><strong>Σενάριο:</strong> Πυροβολείς τον εχθρό με κλικ.</p>
   <hr />
-  <div align="center">
-    <a-scene shooter embedded cursor="rayOrigin: mouse" background="color:PowderBlue" ondblclick="this.requestFullscreen();">
-      
-      <!-- Κάμερα + Κέρσορας με raycaster -->
-      <a-camera>
-        <a-cursor id="cursor"
-                  fuse="false"
-                  raycaster="objects: .target"
-                  material="color: yellow; shader: flat;">
-        </a-cursor>
-      </a-camera>
 
-      <a-sphere radius="500" position="0 5000 0" material="fog: false"></a-sphere>
+  <a-scene shooter cursor="rayOrigin: mouse" embedded background="color:SkyBlue" ondblclick="this.requestFullscreen();">
+    
+    <!-- Camera & Cursor -->
+    <a-camera>
+      <a-cursor id="cursor" raycaster="objects: .target" material="color: yellow;"></a-cursor>
+    </a-camera>
 
-      <!-- Φωτισμός -->
-      <a-entity position="0 250 0" light="type: directional; intensity: 0.5; castShadow: true;
-              shadowCameraBottom: -500; shadowCameraTop: 500; shadowCameraLeft: -500; shadowCameraRight: 500">
-      </a-entity>
+    <!-- Lighting -->
+    <a-entity light="type: directional; intensity: 0.6;" position="0 5 5"></a-entity>
+    <a-entity light="type: ambient; intensity: 0.3;"></a-entity>
 
-      <a-light type="ambient" intensity="0.25"></a-light>
+    <!-- Ground -->
+    <a-plane rotation="-90 0 0" width="100" height="100" color="#deb887"></a-plane>
 
-      <a-plane color="PaleGoldenrod" static-body height="1000" width="1000" rotation="-90 0 0"></a-plane>
+    <!-- Assets -->
+    <a-assets>
+      <!-- Αυτό είναι το μοντέλο που έχει μετατραπεί από Sneak Walk.fbx σε glb -->
+      <a-asset-item id="sneakwalk" src="sneak-walk.glb"></a-asset-item>
+    </a-assets>
 
-      <!-- Μοντέλα -->
-      <a-assets>
-        <a-asset-item id="bank" src="old_western_bank_with_interior_low_poly.glb"></a-asset-item>
-        <a-asset-item id="watertower" src="low_poly_western_watertower.glb"></a-asset-item>
-        <a-asset-item id="church"  src="western_church_-_mobile_gameready.glb"></a-asset-item>
-        <a-asset-item id="tree"  src="tree.glb"></a-asset-item>
-        <a-asset-item id="cowboy" src="cowboy.glb"></a-asset-item>
-      </a-assets>
+    <!-- Cowboy εχθρός με κινούμενο animation -->
+    <a-entity id="enemy"
+              class="target"
+              gltf-model="#sneakwalk"
+              position="0 0 -5"
+              scale="1 1 1"
+              animation-mixer="clip: *"
+              animation="property: rotation; to: 90 0 0; dur: 1000; startEvents: shoot">
+    </a-entity>
 
-      <a-entity gltf-model="#bank" scale="2 2 2" position="-1 -0.4 -20"></a-entity>
-      <a-entity gltf-model="#watertower" scale="2 3 2" position="25 57 -20"></a-entity>
-      <a-entity gltf-model="#church" scale="2 2 2" position="-60 1.1 20" rotation="0 -180 0"></a-entity>
-
-      <!-- Ο Cowboy στόχος -->
-      <a-entity id="enemy"
-                class="target"
-                gltf-model="#cowboy"
-                position="0 0 -5"
-                scale="1 1 1"
-                animation="property: rotation; to: 90 0 0; dur: 1000; startEvents: shoot">
-      </a-entity>
-
-    </a-scene>
-  </div>
-
-  <script>
-    var scene1 = document.querySelector('a-scene');
-    for (var i = 0; i < 10; i++) {
-      var tree = document.createElement('a-entity');
-      var x = Math.random() * 80 - 40;
-      var z = Math.random() * 80 - 40;
-      var s = 0.1;
-      var r = Math.random() * 180 - 90;
-      tree.setAttribute('gltf-model', '#tree');
-      tree.setAttribute('position', x + ' 0 ' + z);
-      tree.setAttribute('scale', s + ' ' + s + ' ' + s);
-      tree.setAttribute('rotation', '0 ' + r + ' 0');
-      tree.setAttribute('shadow', 'receive: false');
-      scene1.appendChild(tree);
-    }
-  </script>
+  </a-scene>
 
   <hr />
-  <p><strong>Οδηγίες:</strong> Κάνε click στον cowboy για να τον "πυροβολήσεις".</p>
-  <hr />
-  <p><strong>Credits:</strong></p>
+  <p><strong>Οδηγίες:</strong> Πάτησε click πάνω στον cowboy για να τον "πυροβολήσεις". Θα δεις μια κίτρινη γραμμή (laser) και αυτός θα πέσει κάτω.</p>
 </body>
 </html>
