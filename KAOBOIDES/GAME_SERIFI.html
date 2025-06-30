@@ -59,14 +59,12 @@
             <a-entity gltf-model="#building" scale="50 50 50" position="-15 0.9 20" rotation="0 -180 0"></a-entity>
             <a-entity gltf-model="#building" scale="50 50 50" position="15 0.9 20" rotation="0 -180 0"></a-entity>
             <a-entity gltf-model="#building" scale="50 50 50" position="30 0.9 20" rotation="0 -180 0"></a-entity>
-            <a-entity gltf-model="#Running" scale="50 50 50" position="30 0.9 20" rotation="0 -180 0"></a-entity>
-
-
+            
 
      <script>
         var scene1 = document.getElementById('s1');
         const baseX = 1;
-        const baseY = 1;
+        const baseY = 0;
         const baseZ = 1;
 
         for (let i = 0; i < 1; i++) {
@@ -77,7 +75,7 @@
 
             Running.setAttribute('gltf-model', '#Running');
             Running.setAttribute('position', `${posX} 0 ${posZ}`);
-            Running.setAttribute('scale', '1 1 1');
+            Running.setAttribute('scale', '0.5 0.5 0.5');
             Running.setAttribute('animation-mixer', 'clip: *; loop: repeat');
             Running.setAttribute('testing', '');
 
