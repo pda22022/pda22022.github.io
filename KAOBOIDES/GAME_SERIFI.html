@@ -71,11 +71,11 @@ var scene1 = document.getElementById('s1');
     const posX = baseX + offsetX;
     const posZ = baseZ + 3;
 
-    baby_chicken.setAttribute('gltf-model', '#Running');
-    baby_chicken.setAttribute('position', `${posX} 0 ${posZ}`);
-    baby_chicken.setAttribute('scale', '0.3 0.3 0.3');
-    baby_chicken.setAttribute('animation-mixer', 'clip: *; loop: repeat');
-    baby_chicken.setAttribute('random-walk', ''); 
+    Running.setAttribute('gltf-model', '#Running');
+    Running.setAttribute('position', `${posX} 0 ${posZ}`);
+    Running.setAttribute('scale', '0.3 0.3 0.3');
+    Running.setAttribute('animation-mixer', 'clip: *; loop: repeat');
+    Running.setAttribute('random-walk', ''); 
 
     scene1.appendChild(Running);
   }
