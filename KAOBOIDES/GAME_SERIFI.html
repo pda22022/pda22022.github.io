@@ -1,9 +1,10 @@
 <html>
 <head>
-      <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/aframe-physics-system@4.0.1/dist/aframe-physics-system.min.js"></script>
-<script>
+    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aframe-physics-system@4.0.1/dist/aframe-physics-system.min.js"></script>
+    
+    <script>
         AFRAME.registerComponent('testing', {
             init: function () {
                 this.el.addEventListener('click', e => {
@@ -13,40 +14,45 @@
         });
     </script>
 
-      
-<style> 
-      h1 { text-align: center; }
-      h3 { text-align: center; }
-      a-scene { width: 50%; height: 50%; border: dotted red 3px; }
-</style>
-
+    <style> 
+        h1 { text-align: center; }
+        h3 { text-align: center; }
+        a-scene { width: 50%; height: 50%; border: dotted red 3px; }
+    </style>
 </head>
 
 <body>
     <h1>ΤΟ ΑΓΡΙΟ ΚΙΝΗΓΙ</h1>
     <h3>Βασιλης Δανηλατος</h3>
- <hr />
-    <P><strong>Σενάριο:</strong>...</P>
- <hr />
-      <div align="center">
-      <a-scene cursor="rayOrigin: mouse" background="color:PowderBlue" ondblclick="this.requestFullscreen();" embedded> 
+    <hr />
+    <p><strong>Σενάριο:</strong>...</p>
+    <hr />
+    <div align="center">
+        <a-scene id="s1" cursor="rayOrigin: mouse" background="color:PowderBlue" ondblclick="this.requestFullscreen();" embedded> 
             <a-camera><a-cursor fuse="true" fuse-timeout="5000"></a-cursor></a-camera>
-      <a-sphere radius="500" position="0 5000 0" material="fog: false"></a-sphere>
-      <a-entity position="0 250 0" light="type: directional; intensity: 0.5; castShadow: true;
-              shadowCameraBottom: -500; shadowCameraTop: 500; shadowCameraLeft: -500; shadowCameraRight: 500">
+            <a-sphere radius="500" position="0 5000 0" material="fog: false"></a-sphere>
             
-      </a-entity>
+            <a-entity position="0 250 0" light="type: directional; intensity: 0.5; castShadow: true;
+                    shadowCameraBottom: -500; shadowCameraTop: 500; shadowCameraLeft: -500; shadowCameraRight: 500">
+            </a-entity>
+
             <a-light type="ambient" intensity="0.25"></a-light>
             <a-plane color="PaleGoldenrod" static-body height="1000" width="1000" rotation="-90 0 0"></a-plane>
-      <a-assets>
-            <a-asset-item id="bank" src="western_bank.glb"></a-asset-item>
-            <a-asset-item id="watertower" src="western_watertower.glb"></a-asset-item>
-            <a-asset-item id="church"  src="western_church.glb"></a-asset-item>
-            <a-asset-item id="tree"  src="tree.glb"></a-asset-item>
-            <a-asset-item id="building" src="western_building.glb"></a-asset-item>
-            <a-asset-item id="tobacco" src="western_tobacco.glb"></a-asset-item>
-            <a-asset-item id="Running" src="Running.glb"></a-asset-item>
-      </a-assets>
+            
+            <a-assets>
+                <a-asset-item id="bank" src="western_bank.glb"></a-asset-item>
+                <a-asset-item id="watertower" src="western_watertower.glb"></a-asset-item>
+                <a-asset-item id="church"  src="western_church.glb"></a-asset-item>
+                <a-asset-item id="tree"  src="tree.glb"></a-asset-item>
+                <a-asset-item id="building" src="western_building.glb"></a-asset-item>
+                <a-asset-item id="tobacco" src="western_tobacco.glb"></a-asset-item>
+                <a-asset-item id="Running" src="Running.glb"></a-asset-item>
+
+                <!-- ✅ ΝΕΟ ANCIENT RUNNER ASSET -->
+                <a-asset-item id="ancient-runner" src="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/CesiumMan/glTF-Binary/CesiumMan.glb"></a-asset-item>
+            </a-assets>
+
+            <!-- Κτίρια -->
             <a-entity gltf-model="#bank" scale="2 2 2" position="-1 -0.4 -20"></a-entity>
             <a-entity gltf-model="#building" scale="50 50 50" position="-35 0.9 -20"></a-entity>
             <a-entity gltf-model="#tobacco" scale="3 3 3" position="-20 -0.2 -20" rotation="0 -90 0"></a-entity>
@@ -55,61 +61,68 @@
             <a-entity gltf-model="#building" scale="50 50 50" position="-15 0.9 20" rotation="0 -180 0"></a-entity>
             <a-entity gltf-model="#building" scale="50 50 50" position="15 0.9 20" rotation="0 -180 0"></a-entity>
             <a-entity gltf-model="#building" scale="50 50 50" position="30 0.9 20" rotation="0 -180 0"></a-entity>
-      </a-scene>
-            
-<script>
-var scene1 = document.getElementById('s1');
 
-  const baseX = 1;
-  const baseY = 1;
-  const baseZ = 1;
+            <!-- ✅ ANCIENT RUNNING CHARACTER -->
+            <a-entity gltf-model="#ancient-runner"
+                      position="5 0 5"
+                      scale="0.3 0.3 0.3"
+                      animation-mixer="clip: *; loop: repeat"
+                      testing>
+            </a-entity>
+        </a-scene>
+    </div>
 
-  for (let i = 0; i < 1; i++) {
-    const Running = document.createElement('a-entity');
+    <!-- Σκηνή με το αρχικό Running -->
+    <script>
+        var scene1 = document.getElementById('s1');
+        const baseX = 1;
+        const baseY = 1;
+        const baseZ = 1;
 
-    const offsetX = (i - 2) * 2; // -4, -2, 0, 2, 4
-    const posX = baseX + offsetX;
-    const posZ = baseZ + 3;
+        for (let i = 0; i < 1; i++) {
+            const Running = document.createElement('a-entity');
+            const offsetX = (i - 2) * 2;
+            const posX = baseX + offsetX;
+            const posZ = baseZ + 3;
 
-    Running.setAttribute('gltf-model', '#Running');
-    Running.setAttribute('position', `${posX} 0 ${posZ}`);
-    Running.setAttribute('scale', '0.3 0.3 0.3');
-    Running.setAttribute('animation-mixer', 'clip: *; loop: repeat');
-    Running.setAttribute('random-walk', ''); 
+            Running.setAttribute('gltf-model', '#Running');
+            Running.setAttribute('position', `${posX} 0 ${posZ}`);
+            Running.setAttribute('scale', '0.3 0.3 0.3');
+            Running.setAttribute('animation-mixer', 'clip: *; loop: repeat');
+            Running.setAttribute('testing', '');
 
-    scene1.appendChild(Running);
-  }
-</script>
-<script>   
- var scene1 = document.querySelector('a-scene');
-  var treeCount = 40; 
-  var innerRadius = 80;
-  var outerRadius = 60; 
-  for (var i = 0; i < treeCount; i++) {
-    var tree = document.createElement('a-entity');
-    var angle = Math.random() * 2 * Math.PI;
-    var radius = innerRadius + Math.random() * (outerRadius - innerRadius);
-    var x = Math.cos(angle) * radius;
-    var z = Math.sin(angle) * radius;
-    var s = 0.1;
-    var r = Math.random() * 180 - 90;
-    tree.setAttribute('gltf-model', '#tree');
-    tree.setAttribute('position', `${x} 0 ${z}`);
-    tree.setAttribute('scale', `${s} ${s} ${s}`);
-    tree.setAttribute('rotation', `0 ${r} 0`);
-    tree.setAttribute('shadow', 'receive: false');
-   
-    scene1.appendChild(tree);
-  }
-</script>
+            scene1.appendChild(Running);
+        }
+    </script>
 
+    <!-- Δέντρα -->
+    <script>
+        var treeCount = 40;
+        var innerRadius = 60;
+        var outerRadius = 80;
+        for (var i = 0; i < treeCount; i++) {
+            var tree = document.createElement('a-entity');
+            var angle = Math.random() * 2 * Math.PI;
+            var radius = innerRadius + Math.random() * (outerRadius - innerRadius);
+            var x = Math.cos(angle) * radius;
+            var z = Math.sin(angle) * radius;
+            var s = 0.1;
+            var r = Math.random() * 180 - 90;
 
+            tree.setAttribute('gltf-model', '#tree');
+            tree.setAttribute('position', `${x} 0 ${z}`);
+            tree.setAttribute('scale', `${s} ${s} ${s}`);
+            tree.setAttribute('rotation', `0 ${r} 0`);
+            tree.setAttribute('shadow', 'receive: false');
 
+            scene1.appendChild(tree);
+        }
+    </script>
 
     <hr />
-   <p><strong>Οδηγίες:</strong>...</p>
+    <p><strong>Οδηγίες:</strong>...</p>
     <hr />
     <p><strong>Credits:</strong></p>      
 </body>
-
 </html>
+
