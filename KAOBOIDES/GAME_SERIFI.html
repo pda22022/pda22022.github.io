@@ -45,7 +45,7 @@
             <a-asset-item id="tree"  src="tree.glb"></a-asset-item>
             <a-asset-item id="building" src="western_building.glb"></a-asset-item>
             <a-asset-item id="tobacco" src="western_tobacco.glb"></a-asset-item>
-            <a-asset-item id="cowboy" src="cowboy.glb"></a-asset-item>
+            <a-asset-item id="Running" src="Running.glb"></a-asset-item>
       </a-assets>
             <a-entity gltf-model="#bank" scale="2 2 2" position="-1 -0.4 -20"></a-entity>
             <a-entity gltf-model="#building" scale="50 50 50" position="-35 0.9 -20"></a-entity>
@@ -55,10 +55,32 @@
             <a-entity gltf-model="#building" scale="50 50 50" position="-15 0.9 20" rotation="0 -180 0"></a-entity>
             <a-entity gltf-model="#building" scale="50 50 50" position="15 0.9 20" rotation="0 -180 0"></a-entity>
             <a-entity gltf-model="#building" scale="50 50 50" position="30 0.9 20" rotation="0 -180 0"></a-entity>
-            <a-entity gltf-model="cowboy.glb" position="0 0 -5" scale="1 1 1"></a-entity>
       </a-scene>
             
 <script>
+var scene1 = document.getElementById('s1');
+
+  const baseX = 1;
+  const baseY = 1;
+  const baseZ = 1;
+
+  for (let i = 0; i < 5; i++) {
+    const  = document.createElement('a-entity');
+
+    const offsetX = (i - 2) * 2; // -4, -2, 0, 2, 4
+    const posX = baseX + offsetX;
+    const posZ = baseZ + 3;
+
+    baby_chicken.setAttribute('gltf-model', '#Running');
+    baby_chicken.setAttribute('position', `${posX} 0 ${posZ}`);
+    baby_chicken.setAttribute('scale', '0.3 0.3 0.3');
+    baby_chicken.setAttribute('animation-mixer', 'clip: *; loop: repeat');
+    baby_chicken.setAttribute('random-walk', ''); 
+
+    scene1.appendChild(Running);
+  }
+
+    
  var scene1 = document.querySelector('a-scene');
   var treeCount = 40; 
   var innerRadius = 80;
