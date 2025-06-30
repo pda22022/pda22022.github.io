@@ -65,7 +65,7 @@
         var scene1 = document.getElementById('s1');
         const baseX = 1;
         const baseY = 0;
-        const baseZ = 1;
+        const baseZ = -1;
 
         for (let i = 0; i < 1; i++) {
             const Running = document.createElement('a-entity');
@@ -75,7 +75,7 @@
 
             Running.setAttribute('gltf-model', '#Running');
             Running.setAttribute('position', `${posX} 0 ${posZ}`);
-            Running.setAttribute('scale', '0.5 0.5 0.5');
+            Running.setAttribute('scale', '0.3 0.3 0.3');
             Running.setAttribute('animation-mixer', 'clip: *; loop: repeat');
             Running.setAttribute('testing', '');
 
