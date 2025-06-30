@@ -3,6 +3,15 @@
 <head>
   <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
+     <script>
+        AFRAME.registerComponent('testing', {
+            init: function () {
+                this.el.addEventListener('click', e => {
+                    this.el.setAttribute('animation-mixer', { timeScale: 1 });
+                });
+            }
+        });
+    </script>
   
     <style> 
         h1 { text-align: center; }
