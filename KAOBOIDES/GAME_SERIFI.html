@@ -123,7 +123,7 @@
               animation-mixer="clip: *; loop: repeat"
               testing
               position="1 0 0"
-              random-walk="speed: 0.01; interval: 7000; boundary: 70 70">
+              random-walk="speed: 0.01; interval: 7000; boundary: 50 50">
     </a-entity>
 
     <a-entity id="runner"
@@ -132,16 +132,14 @@
               animation-mixer="clip: *; loop: repeat"
               testing
               position="5 0 0"
-              random-walk="speed: 0.01; interval: 7000; boundary: 70 70">
+              random-walk="speed: 0.01; interval: 7000; boundary: 50 50">
     </a-entity>
 
     <!-- Δέντρα -->
     <script>
       var scene1 = document.getElementById('s1');
-      var treeCount = 40;
       var treeCount = 100;
       var innerRadius = 60;
-      var outerRadius = 80;
       var outerRadius = 200;
 
       for (var i = 0; i < treeCount; i++) {
