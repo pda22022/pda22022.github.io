@@ -6,8 +6,8 @@
   <script>
     AFRAME.registerComponent('random-walk', {
   schema: {
-    speed: { type: 'number', default: 0.01 },
-    interval: { type: 'int', default: 8000 },
+    speed: { type: 'number', default: 0.005 },
+    interval: { type: 'int', default: 10000 },
     boundary: { type: 'vec2', default: { x: 60, y: 60 } }
   },
   init: function () {
@@ -120,7 +120,7 @@
 
     <a-entity id="runner2"
               gltf-model="#Walking"
-              scale="0.5 0.5 0.5"
+              scale="1 1 1"
               animation-mixer="clip: *; loop: repeat"
               testing
               position="3 0 0"
@@ -129,10 +129,10 @@
 
     <a-entity id="runner3"
               gltf-model="#Crouch Walk Forward"
-              scale="0.5 0.5 0.5"
+              scale="1 1 1"
               animation-mixer="clip: *; loop: repeat"
               testing
-              position="5 0 0"
+              position="5 0.5 0"
               random-walk="speed: 0.005; interval: 10000; boundary: 50 50">
     </a-entity>
 
