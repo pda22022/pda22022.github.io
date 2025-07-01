@@ -2,18 +2,10 @@
 <html>
 <head>
   <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
-     <script>
-        AFRAME.registerComponent('testing', {
-            init: function () {
-                this.el.addEventListener('click', e => {
-                    this.el.setAttribute('animation-mixer', { timeScale: 1 });
-                });
-            }
-        });
- </script>
+  <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
   
- <script>
+  <script>
+    // Component for activating animation on click
     AFRAME.registerComponent('testing', {
       init: function () {
         this.el.addEventListener('click', e => {
@@ -22,64 +14,54 @@
       }
     });
 
-   
-  AFRAME.registerComponent('random-walk', {
+    // Component for random movement with avoidance of repeating direction
+    AFRAME.registerComponent('random-walk', {
       schema: {
-      speed: { type: 'number', default: 0.02 },
-      interval: { type: 'number', default: 3000 },
-      boundary: { type: 'vec2', default: { x: 50, y: 50 } } // x = όριο X, y = όριο Z
-    },
-    init: function () {
-      this.direction = new THREE.Vector3();
-      this.pickNewDirection();
-      this.lastTime = 0;
-    },
-    tick: function (time, delta) {
-      if (time - this.lastTime > this.data.interval) {
+        speed: { type: 'number', default: 0.02 },
+        interval: { type: 'int', default: 3000 },
+        boundary: { type: 'vec2', default: { x: 50, y: 50 } }
+      },
+      init: function () {
+        this.direction = new THREE.Vector3();
         this.pickNewDirection();
-        this.lastTime = time;
+        this.lastTime = 0;
+        this.lastAngle = null;
+      },
+      tick: function (time, timeDelta) {
+        if (!this.lastTime || time - this.lastTime > this.data.interval) {
+          this.pickNewDirection();
+          this.lastTime = time;
+        }
+        let pos = this.el.object3D.position;
+        let newX = pos.x + this.direction.x * this.data.speed * timeDelta;
+        let newZ = pos.z + this.direction.z * this.data.speed * timeDelta;
+
+        // boundary check
+        if (Math.abs(newX) < this.data.boundary.x && Math.abs(newZ) < this.data.boundary.y) {
+          this.el.object3D.position.set(newX, pos.y, newZ);
+        } else {
+          this.pickNewDirection();
+        }
+      },
+      pickNewDirection: function () {
+        let angle;
+        do {
+          angle = Math.random() * 2 * Math.PI;
+        } while (this.lastAngle !== null && Math.abs(angle - this.lastAngle) < Math.PI / 4);
+
+        this.lastAngle = angle;
+        this.direction.set(Math.sin(angle), 0, Math.cos(angle));
       }
+    });
+  </script>
 
-      const pos = this.el.object3D.position;
-      const newX = pos.x + this.direction.x * this.data.speed * delta;
-      const newZ = pos.z + this.direction.z * this.data.speed * delta;
-
-      // Έλεγχος ορίων
-      const maxX = this.data.boundary.x;
-      const maxZ = this.data.boundary.y;
-
-      if (Math.abs(newX) > maxX || Math.abs(newZ) > maxZ) {
-        this.pickNewDirection(true); // αλλάζει κατεύθυνση αν βγει
-        return;
-      }
-
-      pos.x = newX;
-      pos.z = newZ;
-
-      // Στρέφεται προς την κατεύθυνση
-      const angle = Math.atan2(this.direction.x, this.direction.z);
-      this.el.object3D.rotation.y = angle;
-    },
-    pickNewDirection: function (forceTurn = false) {
-      let angle = Math.random() * 2 * Math.PI;
-      if (forceTurn) {
-        angle += Math.PI; // περίπου αντίθετη κατεύθυνση αν βγει εκτός
-      }
-      this.direction.set(Math.sin(angle), 0, Math.cos(angle));
-    }
-  });
-</script>
-
-
-
-  
-    <style>
-        h1 { text-align: center; }
-        h3 { text-align: center; }
-        a-scene { width: 50%; height: 50%; border: dotted silver 3px; }
-    </style>
+  <style>
+    h1 { text-align: center; }
+    h3 { text-align: center; }
+    a-scene { width: 50%; height: 50%; border: dotted silver 3px; }
+  </style>
 </head>
-  
+
 <body>
   <h1>ΤΟ ΑΓΡΙΟ ΚΙΝΗΓΙ</h1>
   <h3>Βασίλης Δανηλάτος</h3>
@@ -87,19 +69,18 @@
   <p><strong>Σενάριο:</strong>...</p>
   <hr />
 <div align="center">
-  
-  <a-scene id="s1" cursor="rayOrigin: mouse" background="color:PowderBlue" ondblclick="this.requestFullscreen();" embedded> 
+
+  <a-scene id="s1" cursor="rayOrigin: mouse" background="color:PowderBlue" ondblclick="this.requestFullscreen();" embedded>
     <a-camera><a-cursor fuse="true" fuse-timeout="5000"></a-cursor></a-camera>
     <a-sphere radius="500" position="0 5000 0" material="fog: false"></a-sphere>
 
     <a-entity position="0 250 0" light="type: directional; intensity: 0.5; castShadow: true;
         shadowCameraBottom: -500; shadowCameraTop: 500; shadowCameraLeft: -500; shadowCameraRight: 500">
     </a-entity>
-    
+
     <a-light type="ambient" intensity="0.25"></a-light>
     <a-plane color="PaleGoldenrod" static-body height="1000" width="1000" rotation="-90 0 0"></a-plane>
-   
-  
+
     <a-assets>
       <a-asset-item id="bank" src="western_bank.glb"></a-asset-item>
       <a-asset-item id="watertower" src="western_watertower.glb"></a-asset-item>
@@ -120,33 +101,22 @@
     <a-entity gltf-model="#building" scale="50 50 50" position="15 0.9 20" rotation="0 -180 0"></a-entity>
     <a-entity gltf-model="#building" scale="50 50 50" position="30 0.9 20" rotation="0 -180 0"></a-entity>
 
-    <!-- Χαρακτήρας που κινείται σε κύκλο -->
+    <!-- Χαρακτήρας που κινείται τυχαία -->
     <a-entity id="runner"
               gltf-model="#Running"
               scale="0.3 0.3 0.3"
               animation-mixer="clip: *; loop: repeat"
               testing
               position="10 0 0"
-              random-walk="speed: 0.02; interval: 5000; boundary: 20 20">
+              random-walk="speed: 0.01; interval: 5000; boundary: 20 20">
     </a-entity>
 
-    <!-- Κυκλική διαδρομή -->
-    <a-curve id="path">
-      <a-curve-point position="10 0 0"></a-curve-point>
-      <a-curve-point position="5 0 10"></a-curve-point>
-      <a-curve-point position="-5 0 10"></a-curve-point>
-      <a-curve-point position="-10 0 0"></a-curve-point>
-      <a-curve-point position="-5 0 -10"></a-curve-point>
-      <a-curve-point position="5 0 -10"></a-curve-point>
-      <a-curve-point position="10 0 0"></a-curve-point>
-    </a-curve>
-
-
+    <!-- Δέντρα -->
     <script>
       var scene1 = document.getElementById('s1');
-      var treeCount = 100;
+      var treeCount = 40;
       var innerRadius = 60;
-      var outerRadius = 200;
+      var outerRadius = 80;
 
       for (var i = 0; i < treeCount; i++) {
         var tree = document.createElement('a-entity');
@@ -171,6 +141,6 @@
   <hr />
   <p><strong>Οδηγίες:</strong>...</p>
   <hr />
-  <p><strong>Credits:</strong></p>  
+  <p><strong>Credits:</strong></p>
 </body>
 </html>
