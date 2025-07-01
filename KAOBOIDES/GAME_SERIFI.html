@@ -4,69 +4,62 @@
   <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
 
   <script>
-     AFRAME.registerComponent('testing', {
-    init: function () {
-      this.el.addEventListener('click', e => {
-        this.el.setAttribute('animation-mixer', { timeScale: 1 });
-      });
-    }
-  });
-
-  // Component for random movement with smooth rotation
-  AFRAME.registerComponent('random-walk', {
-    schema: {
-      speed: { type: 'number', default: 0.02 },
-      interval: { type: 'int', default: 3000 },
-      boundary: { type: 'vec2', default: { x: 50, y: 50 } }
-    },
-    init: function () {
-      this.direction = new THREE.Vector3();
+    AFRAME.registerComponent('random-walk', {
+  schema: {
+    speed: { type: 'number', default: 0.02 },
+    interval: { type: 'int', default: 3000 },
+    boundary: { type: 'vec2', default: { x: 50, y: 50 } }
+  },
+  init: function () {
+    this.direction = new THREE.Vector3();
+    this.pickNewDirection();
+    this.lastTime = 0;
+    this.previousPosition = this.el.object3D.position.clone();
+    this.lastAngle = null;
+  },
+  tick: function (time, timeDelta) {
+    if (!this.lastTime || time - this.lastTime > this.data.interval) {
+      // Αποθήκευση προηγούμενης θέσης πριν αλλάξει κατεύθυνση
+      this.previousPosition.copy(this.el.object3D.position);
       this.pickNewDirection();
-      this.lastTime = 0;
-      this.lastAngle = null;
-    },
-    tick: function (time, timeDelta) {
-      if (!this.lastTime || time - this.lastTime > this.data.interval) {
-        this.pickNewDirection();
-        this.lastTime = time;
-      }
-
-      let pos = this.el.object3D.position;
-      let newX = pos.x + this.direction.x * this.data.speed * timeDelta;
-      let newZ = pos.z + this.direction.z * this.data.speed * timeDelta;
-
-      // boundary check
-      if (Math.abs(newX) < this.data.boundary.x && Math.abs(newZ) < this.data.boundary.y) {
-        this.el.object3D.position.set(newX, pos.y, newZ);
-      } else {
-        this.pickNewDirection();
-      }
-    },
-    pickNewDirection: function () {
-      let angle;
-      do {
-        angle = Math.random() * 2 * Math.PI;
-      } while (this.lastAngle !== null && Math.abs(angle - this.lastAngle) < Math.PI / 4);
-
-      this.lastAngle = angle;
-      this.direction.set(Math.sin(angle), 0, Math.cos(angle));
-
-      // Rotate smoothly to new direction
-      const rotationY = THREE.MathUtils.radToDeg(angle);
-
-      // Remove existing rotation animation if any
-      if (this.el.getAttribute('animation__rotate')) {
-        this.el.removeAttribute('animation__rotate');
-      }
-
-      this.el.setAttribute('animation__rotate', {
-        property: 'rotation',
-        to: `0 ${rotationY} 0`,
-        dur: 1000,
-        easing: 'easeInOutQuad'
-      });
+      this.lastTime = time;
     }
-  });
+
+    const pos = this.el.object3D.position;
+    const movement = this.direction.clone().multiplyScalar(this.data.speed * timeDelta);
+    const newPos = pos.clone().add(movement);
+
+    // έλεγχος αν είναι εντός ορίων
+    if (Math.abs(newPos.x) < this.data.boundary.x && Math.abs(newPos.z) < this.data.boundary.y) {
+      this.el.object3D.position.copy(newPos);
+    } else {
+      // Αν βγει εκτός ορίων, επιλέγει νέα κατεύθυνση χωρίς τηλεμεταφορά
+      this.previousPosition.copy(pos);
+      this.pickNewDirection();
+    }
+  },
+  pickNewDirection: function () {
+    let angle;
+    do {
+      angle = Math.random() * 2 * Math.PI;
+    } while (this.lastAngle !== null && Math.abs(angle - this.lastAngle) < Math.PI / 4);
+
+    this.lastAngle = angle;
+    this.direction.set(Math.sin(angle), 0, Math.cos(angle));
+
+    const rotationY = THREE.MathUtils.radToDeg(angle);
+
+    // Καθαρισμός προηγούμενου animation
+    this.el.removeAttribute('animation__rotate');
+    this.el.setAttribute('animation__rotate', {
+      property: 'rotation',
+      to: `0 ${rotationY} 0`,
+      dur: 1000,
+      easing: 'easeInOutQuad'
+    });
+  }
+});
+
   </script>
 
   <style>
@@ -104,6 +97,7 @@
       <a-asset-item id="tobacco" src="western_tobacco.glb"></a-asset-item>
       <a-asset-item id="Running" src="Running.glb"></a-asset-item>
       <a-asset-item id="Running2" src="Running2.glb"></a-asset-item>
+      <a-asset-item id="Crouch Walk Forward" src="Crouch Walk Forward.glb"></a-asset-item>
     </a-assets>
 
     <!-- Κτίρια -->
@@ -117,7 +111,7 @@
     <a-entity gltf-model="#building" scale="50 50 50" position="30 0.9 20" rotation="0 -180 0"></a-entity>
 
     <!-- Χαρακτήρας που κινείται τυχαία -->
-    <a-entity id="runner"
+    <a-entity id="runner1"
               gltf-model="#Running"
               scale="0.3 0.3 0.3"
               animation-mixer="clip: *; loop: repeat"
@@ -126,7 +120,7 @@
               random-walk="speed: 0.01; interval: 7000; boundary: 50 50">
     </a-entity>
 
-    <a-entity id="runner"
+    <a-entity id="runner2"
               gltf-model="#Running2"
               scale="10 10 10"
               animation-mixer="clip: *; loop: repeat"
@@ -134,6 +128,16 @@
               position="5 0 0"
               random-walk="speed: 0.01; interval: 7000; boundary: 50 50">
     </a-entity>
+
+    <a-entity id="runner3"
+              gltf-model="#Crouch Walk Forward"
+              scale="10 10 10"
+              animation-mixer="clip: *; loop: repeat"
+              testing
+              position="10 0 0"
+              random-walk="speed: 0.01; interval: 7000; boundary: 50 50">
+    </a-entity>
+
 
     <!-- Δέντρα -->
     <script>
