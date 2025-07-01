@@ -66,7 +66,7 @@
               animation-mixer="clip: *; loop: repeat"
               testing
               position="10 0 0"
-              random-walk="speed: 0.02; interval: 3000; boundary: 70 70">
+              random-walk="speed: 0.02; interval: 3000; boundary: 30 30">
     </a-entity>
 
     <!-- Κυκλική διαδρομή -->
@@ -84,7 +84,7 @@
  <script>
   AFRAME.registerComponent('random-walk', {
     schema: {
-      speed: { type: 'number', default: 0.05 },
+      speed: { type: 'number', default: 0.02 },
       interval: { type: 'number', default: 3000 },
       boundary: { type: 'vec2', default: { x: 30, y: 30 } } // x = όριο X, y = όριο Z
     },
