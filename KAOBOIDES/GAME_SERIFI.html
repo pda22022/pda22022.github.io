@@ -66,7 +66,7 @@
               animation-mixer="clip: *; loop: repeat"
               testing
               position="10 0 0"
-              random-walk="speed: 0.05; interval: 3000; boundary: 70 70">
+              random-walk="speed: 0.02; interval: 3000; boundary: 70 70">
     </a-entity>
 
     <!-- Κυκλική διαδρομή -->
@@ -86,7 +86,7 @@
     schema: {
       speed: { type: 'number', default: 0.05 },
       interval: { type: 'number', default: 3000 },
-      boundary: { type: 'vec2', default: { x: 50, y: 50 } } // x = όριο X, y = όριο Z
+      boundary: { type: 'vec2', default: { x: 30, y: 30 } } // x = όριο X, y = όριο Z
     },
     init: function () {
       this.direction = new THREE.Vector3();
