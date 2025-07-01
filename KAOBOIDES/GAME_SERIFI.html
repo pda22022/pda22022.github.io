@@ -16,9 +16,9 @@
  <script>
   AFRAME.registerComponent('random-walk', {
     schema: {
-      speed: { type: 'number', default: 0.03 },
-      interval: { type: 'number', default: 8000 },
-      boundary: { type: 'vec2', default: { x: 80, y: 80 } } // x = όριο X, y = όριο Z
+      speed: { type: 'number', default: 0.01 },
+      interval: { type: 'number', default: 2000 },
+      boundary: { type: 'vec2', default: { x: 50, y: 20 } } // x = όριο X, y = όριο Z
     },
     init: function () {
       this.direction = new THREE.Vector3();
