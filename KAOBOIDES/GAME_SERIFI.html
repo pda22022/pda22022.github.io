@@ -6,9 +6,9 @@
   <script>
     AFRAME.registerComponent('random-walk', {
   schema: {
-    speed: { type: 'number', default: 0.02 },
-    interval: { type: 'int', default: 3000 },
-    boundary: { type: 'vec2', default: { x: 50, y: 50 } }
+    speed: { type: 'number', default: 0.01 },
+    interval: { type: 'int', default: 8000 },
+    boundary: { type: 'vec2', default: { x: 60, y: 60 } }
   },
   init: function () {
     this.direction = new THREE.Vector3();
@@ -117,25 +117,25 @@
               animation-mixer="clip: *; loop: repeat"
               testing
               position="1 0 0"
-              random-walk="speed: 0.01; interval: 7000; boundary: 50 50">
+              random-walk="speed: 0.01; interval: 8000; boundary: 50 50">
     </a-entity>
 
     <a-entity id="runner2"
               gltf-model="#Running2"
-              scale="10 10 10"
+              scale="0.3 0.3 0.3"
               animation-mixer="clip: *; loop: repeat"
               testing
-              position="5 0 0"
-              random-walk="speed: 0.01; interval: 7000; boundary: 50 50">
+              position="3 0 0"
+              random-walk="speed: 0.01; interval: 8000; boundary: 50 50">
     </a-entity>
 
     <a-entity id="runner3"
               gltf-model="#Crouch Walk Forward"
-              scale="10 10 10"
+              scale="0.3 0.3 0.3"
               animation-mixer="clip: *; loop: repeat"
               testing
-              position="10 0 0"
-              random-walk="speed: 0.01; interval: 7000; boundary: 50 50">
+              position="5 0 0"
+              random-walk="speed: 0.01; interval: 8000; boundary: 50 50">
     </a-entity>
 
 
