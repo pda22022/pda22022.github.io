@@ -5,65 +5,60 @@
 
   <script>
     AFRAME.registerComponent('random-walk', {
-  schema: {
-    speed: { type: 'number', default: 0.005 },
-    interval: { type: 'int', default: 10000 },
-    boundary: { type: 'vec2', default: { x: 60, y: 60 } }
-  },
-  init: function () {
-    this.direction = new THREE.Vector3();
-    this.pickNewDirection();
-    this.lastChange = 0;
-    this.previousPosition = this.el.object3D.position.clone();
-    this.lastAngle = null;
-  },
-  tick: function (time, timeDelta) {
-    if (!this.lastChange || time - this.lastChange > this.data.interval) {
-      this.previousPosition.copy(this.el.object3D.position);
-      this.pickNewDirection();
-      this.lastChange = time;
-    }
+      schema: {
+        speed: { type: 'number', default: 0.005 },
+        interval: { type: 'int', default: 10000 },
+        boundary: { type: 'vec2', default: { x: 60, y: 60 } }
+      },
+      init: function () {
+        this.direction = new THREE.Vector3();
+        this.pickNewDirection();
+        this.lastChange = 0;
+        this.previousPosition = this.el.object3D.position.clone();
+        this.lastAngle = null;
+      },
+      tick: function (time, timeDelta) {
+        if (!this.lastChange || time - this.lastChange > this.data.interval) {
+          this.previousPosition.copy(this.el.object3D.position);
+          this.pickNewDirection();
+          this.lastChange = time;
+        }
 
-    const pos = this.el.object3D.position;
-    const movement = this.direction.clone().multiplyScalar(this.data.speed * timeDelta);
-    const nextPos = pos.clone().add(movement);
+        const pos = this.el.object3D.position;
+        const movement = this.direction.clone().multiplyScalar(this.data.speed * timeDelta);
+        const nextPos = pos.clone().add(movement);
 
-    // Έλεγχος αν παραμένει εντός ορίων
-    if (Math.abs(nextPos.x) < this.data.boundary.x && Math.abs(nextPos.z) < this.data.boundary.y) {
-      this.el.object3D.position.copy(nextPos);
-    } else {
-      // Αν πρόκειται να βγει εκτός, αλλάζει κατεύθυνση χωρίς να κάνει teleport
-      this.pickNewDirection();
-      this.lastChange = time;
-    }
-  },
-  pickNewDirection: function () {
-    let angle;
-    do {
-      angle = Math.random() * 2 * Math.PI;
-    } while (this.lastAngle !== null && Math.abs(angle - this.lastAngle) < Math.PI / 4);
+        if (Math.abs(nextPos.x) < this.data.boundary.x && Math.abs(nextPos.z) < this.data.boundary.y) {
+          this.el.object3D.position.copy(nextPos);
+        } else {
+          this.pickNewDirection();
+          this.lastChange = time;
+        }
+      },
+      pickNewDirection: function () {
+        let angle;
+        do {
+          angle = Math.random() * 2 * Math.PI;
+        } while (this.lastAngle !== null && Math.abs(angle - this.lastAngle) < Math.PI / 4);
 
-    this.lastAngle = angle;
-    this.direction.set(Math.sin(angle), 0, Math.cos(angle)).normalize();
+        this.lastAngle = angle;
+        this.direction.set(Math.sin(angle), 0, Math.cos(angle)).normalize();
+        const rotationY = THREE.MathUtils.radToDeg(angle);
 
-    // Περιστροφή χαρακτήρα προς την κατεύθυνση
-    const rotationY = THREE.MathUtils.radToDeg(angle);
-
-    this.el.removeAttribute('animation__rotate');
-    this.el.setAttribute('animation__rotate', {
-      property: 'rotation',
-      to: `0 ${rotationY} 0`,
-      dur: 500,
-      easing: 'easeInOutSine'
+        this.el.removeAttribute('animation__rotate');
+        this.el.setAttribute('animation__rotate', {
+          property: 'rotation',
+          to: `0 ${rotationY} 0`,
+          dur: 500,
+          easing: 'easeInOutSine'
+        });
+      }
     });
-  }
-});
   </script>
 
   <style>
-    h1 { text-align: center; }
-    h3 { text-align: center; }
-    a-scene { width: 50%; height: 50%; border: dotted silver 3px; }
+    h1, h3 { text-align: center; }
+    a-scene { width: 80vw; height: 80vh; border: dotted silver 3px; }
   </style>
 </head>
 
@@ -73,128 +68,125 @@
   <hr />
   <p><strong>Σενάριο:</strong>...</p>
   <hr />
-<div align="center">
+  <div align="center">
 
-  <a-scene id="s1" cursor="rayOrigin: mouse" background="color:PowderBlue" ondblclick="this.requestFullscreen();" embedded>
-    <a-camera><a-cursor fuse="true" fuse-timeout="5000"></a-cursor></a-camera>
-    <a-sphere radius="500" position="0 5000 0" material="fog: false"></a-sphere>
+    <a-scene id="s1" cursor="rayOrigin: mouse" background="color:PowderBlue" ondblclick="this.requestFullscreen();" embedded>
+      <a-camera>
+        <a-cursor fuse="true" fuse-timeout="500"></a-cursor>
+      </a-camera>
 
-    <a-entity position="0 250 0" light="type: directional; intensity: 0.5; castShadow: true;
-        shadowCameraBottom: -500; shadowCameraTop: 500; shadowCameraLeft: -500; shadowCameraRight: 500">
-    </a-entity>
+      <a-sphere radius="500" position="0 5000 0" material="fog: false"></a-sphere>
 
-    <a-light type="ambient" intensity="0.25"></a-light>
-    <a-plane color="PaleGoldenrod" static-body height="1000" width="1000" rotation="-90 0 0"></a-plane>
+      <a-entity position="0 250 0" light="type: directional; intensity: 0.5; castShadow: true;
+          shadowCameraBottom: -500; shadowCameraTop: 500; shadowCameraLeft: -500; shadowCameraRight: 500">
+      </a-entity>
 
-    <a-assets>
-      <a-asset-item id="bank" src="western_bank.glb"></a-asset-item>
-      <a-asset-item id="watertower" src="western_watertower.glb"></a-asset-item>
-      <a-asset-item id="church" src="western_church.glb"></a-asset-item>
-      <a-asset-item id="tree" src="tree.glb"></a-asset-item>
-      <a-asset-item id="building" src="western_building.glb"></a-asset-item>
-      <a-asset-item id="tobacco" src="western_tobacco.glb"></a-asset-item>
-      <a-asset-item id="Running" src="Running.glb"></a-asset-item>
-    </a-assets>
+      <a-light type="ambient" intensity="0.25"></a-light>
+      <a-plane color="PaleGoldenrod" static-body height="1000" width="1000" rotation="-90 0 0"></a-plane>
 
-    <!-- Κτίρια -->
-    <a-entity gltf-model="#bank" scale="2 2 2" position="-1 -0.4 -20"></a-entity>
-    <a-entity gltf-model="#building" scale="50 50 50" position="-35 0.9 -20"></a-entity>
-    <a-entity gltf-model="#tobacco" scale="3 3 3" position="-20 -0.2 -20" rotation="0 -90 0"></a-entity>
-    <a-entity gltf-model="#watertower" scale="2 3 2" position="25 57 -20"></a-entity>
-    <a-entity gltf-model="#church" scale="2 2 2" position="-60 0.9 20" rotation="0 -180 0"></a-entity>
-    <a-entity gltf-model="#building" scale="50 50 50" position="-15 0.9 20" rotation="0 -180 0"></a-entity>
-    <a-entity gltf-model="#building" scale="50 50 50" position="15 0.9 20" rotation="0 -180 0"></a-entity>
-    <a-entity gltf-model="#building" scale="50 50 50" position="30 0.9 20" rotation="0 -180 0"></a-entity>
+      <!-- HUD για σκορ -->
+      <a-entity id="scoreText" position="2 2 -3" text="value: Σκορ: 0 / 7; color: black; width: 4;"></a-entity>
 
-    <!-- Χαρακτήρας που κινείται τυχαία -->
-    <a-entity id="runner1"
-              gltf-model="#Running"
-              scale="0.3 0.3 0.3"
-              animation-mixer="clip: *; loop: repeat"
-              testing
-              position="1 0 0"
-              random-walk="speed: 0.005; interval: 10000; boundary: 50 50">
-    </a-entity>
-    <a-entity id="runner1"
-              gltf-model="#Running"
-              scale="0.3 0.3 0.3"
-              animation-mixer="clip: *; loop: repeat"
-              testing
-              position="1 0 0"
-              random-walk="speed: 0.005; interval: 10000; boundary: 50 50">
-    </a-entity>
-    <a-entity id="runner1"
-              gltf-model="#Running"
-              scale="0.3 0.3 0.3"
-              animation-mixer="clip: *; loop: repeat"
-              testing
-              position="1 0 0"
-              random-walk="speed: 0.005; interval: 10000; boundary: 50 50">
-    </a-entity>
-    <a-entity id="runner1"
-              gltf-model="#Running"
-              scale="0.3 0.3 0.3"
-              animation-mixer="clip: *; loop: repeat"
-              testing
-              position="1 0 0"
-              random-walk="speed: 0.005; interval: 10000; boundary: 50 50">
-    </a-entity>
-    <a-entity id="runner1"
-              gltf-model="#Running"
-              scale="0.3 0.3 0.3"
-              animation-mixer="clip: *; loop: repeat"
-              testing
-              position="1 0 0"
-              random-walk="speed: 0.005; interval: 10000; boundary: 50 50">
-    </a-entity>
-    <a-entity id="runner1"
-              gltf-model="#Running"
-              scale="0.3 0.3 0.3"
-              animation-mixer="clip: *; loop: repeat"
-              testing
-              position="1 0 0"
-              random-walk="speed: 0.005; interval: 10000; boundary: 50 50">
-    </a-entity>
-    <a-entity id="runner1"
-              gltf-model="#Running"
-              scale="0.3 0.3 0.3"
-              animation-mixer="clip: *; loop: repeat"
-              testing
-              position="1 0 0"
-              random-walk="speed: 0.005; interval: 10000; boundary: 50 50">
-    </a-entity>
+      <a-assets>
+        <a-asset-item id="bank" src="western_bank.glb"></a-asset-item>
+        <a-asset-item id="watertower" src="western_watertower.glb"></a-asset-item>
+        <a-asset-item id="church" src="western_church.glb"></a-asset-item>
+        <a-asset-item id="tree" src="tree.glb"></a-asset-item>
+        <a-asset-item id="building" src="western_building.glb"></a-asset-item>
+        <a-asset-item id="tobacco" src="western_tobacco.glb"></a-asset-item>
+        <a-asset-item id="Running" src="Running.glb"></a-asset-item>
+      </a-assets>
 
+      <!-- Κτίρια -->
+      <a-entity gltf-model="#bank" scale="2 2 2" position="-1 -0.4 -20"></a-entity>
+      <a-entity gltf-model="#building" scale="50 50 50" position="-35 0.9 -20"></a-entity>
+      <a-entity gltf-model="#tobacco" scale="3 3 3" position="-20 -0.2 -20" rotation="0 -90 0"></a-entity>
+      <a-entity gltf-model="#watertower" scale="2 3 2" position="25 57 -20"></a-entity>
+      <a-entity gltf-model="#church" scale="2 2 2" position="-60 0.9 20" rotation="0 -180 0"></a-entity>
+      <a-entity gltf-model="#building" scale="50 50 50" position="-15 0.9 20" rotation="0 -180 0"></a-entity>
+      <a-entity gltf-model="#building" scale="50 50 50" position="15 0.9 20" rotation="0 -180 0"></a-entity>
+      <a-entity gltf-model="#building" scale="50 50 50" position="30 0.9 20" rotation="0 -180 0"></a-entity>
 
-    <!-- Δέντρα -->
-    <script>
-      var scene1 = document.getElementById('s1');
-      var treeCount = 100;
-      var innerRadius = 60;
-      var outerRadius = 200;
+      <!-- 7 Χαρακτήρες -->
+      <a-entity class="target-runner" id="runner1" gltf-model="#Running" scale="0.3 0.3 0.3" animation-mixer="clip: *; loop: repeat" position="1 0 0" random-walk></a-entity>
+      <a-entity class="target-runner" id="runner2" gltf-model="#Running" scale="0.3 0.3 0.3" animation-mixer="clip: *; loop: repeat" position="5 0 5" random-walk></a-entity>
+      <a-entity class="target-runner" id="runner3" gltf-model="#Running" scale="0.3 0.3 0.3" animation-mixer="clip: *; loop: repeat" position="-3 0 -2" random-walk></a-entity>
+      <a-entity class="target-runner" id="runner4" gltf-model="#Running" scale="0.3 0.3 0.3" animation-mixer="clip: *; loop: repeat" position="-6 0 3" random-walk></a-entity>
+      <a-entity class="target-runner" id="runner5" gltf-model="#Running" scale="0.3 0.3 0.3" animation-mixer="clip: *; loop: repeat" position="4 0 -5" random-walk></a-entity>
+      <a-entity class="target-runner" id="runner6" gltf-model="#Running" scale="0.3 0.3 0.3" animation-mixer="clip: *; loop: repeat" position="-7 0 -4" random-walk></a-entity>
+      <a-entity class="target-runner" id="runner7" gltf-model="#Running" scale="0.3 0.3 0.3" animation-mixer="clip: *; loop: repeat" position="0 0 7" random-walk></a-entity>
 
-      for (var i = 0; i < treeCount; i++) {
-        var tree = document.createElement('a-entity');
-        var angle = Math.random() * 2 * Math.PI;
-        var radius = innerRadius + Math.random() * (outerRadius - innerRadius);
-        var x = Math.cos(angle) * radius;
-        var z = Math.sin(angle) * radius;
-        var s = 0.1;
-        var r = Math.random() * 180 - 90;
+      <!-- Δέντρα -->
+      <script>
+        var scene1 = document.getElementById('s1');
+        var treeCount = 100;
+        var innerRadius = 60;
+        var outerRadius = 200;
 
-        tree.setAttribute('gltf-model', '#tree');
-        tree.setAttribute('position', `${x} 0 ${z}`);
-        tree.setAttribute('scale', `${s} ${s} ${s}`);
-        tree.setAttribute('rotation', `0 ${r} 0`);
-        tree.setAttribute('shadow', 'receive: false');
+        for (var i = 0; i < treeCount; i++) {
+          var tree = document.createElement('a-entity');
+          var angle = Math.random() * 2 * Math.PI;
+          var radius = innerRadius + Math.random() * (outerRadius - innerRadius);
+          var x = Math.cos(angle) * radius;
+          var z = Math.sin(angle) * radius;
+          var s = 0.1;
+          var r = Math.random() * 180 - 90;
 
-        scene1.appendChild(tree);
-      }
-    </script>
-  </a-scene>
-</div>
+          tree.setAttribute('gltf-model', '#tree');
+          tree.setAttribute('position', `${x} 0 ${z}`);
+          tree.setAttribute('scale', `${s} ${s} ${s}`);
+          tree.setAttribute('rotation', `0 ${r} 0`);
+          tree.setAttribute('shadow', 'receive: false');
+
+          scene1.appendChild(tree);
+        }
+      </script>
+    </a-scene>
+  </div>
+
   <hr />
-  <p><strong>Οδηγίες:</strong>...</p>
+  <p><strong>Οδηγίες:</strong> Στόχευσε με τον κέρσορα και κάνε click στους κινούμενους χαρακτήρες!</p>
   <hr />
   <p><strong>Credits:</strong></p>
+
+  <!-- Πυροβολισμός και σκορ -->
+  <script>
+    let score = 0;
+    const totalTargets = 7;
+    const scoreText = document.querySelector('#scoreText');
+
+    AFRAME.registerComponent('target-listener', {
+      init: function () {
+        this.el.addEventListener('click', () => {
+          // Φως σαν πυροβολισμός
+          const flash = document.createElement('a-light');
+          flash.setAttribute('type', 'point');
+          flash.setAttribute('color', 'yellow');
+          flash.setAttribute('intensity', '5');
+          flash.setAttribute('decay', '2');
+          flash.setAttribute('distance', '10');
+          flash.setAttribute('position', this.el.getAttribute('position'));
+          this.el.sceneEl.appendChild(flash);
+
+          // Αφαίρεση χαρακτήρα και φωτός
+          setTimeout(() => {
+            this.el.parentNode.removeChild(this.el);
+            flash.parentNode.removeChild(flash);
+
+            score++;
+            scoreText.setAttribute('text', `value: Σκορ: ${score} / ${totalTargets}`);
+          }, 200);
+        });
+      }
+    });
+
+    // Όταν φορτωθεί το DOM, ενεργοποίησε τα events
+    window.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.target-runner').forEach(el => {
+        el.setAttribute('target-listener', '');
+      });
+    });
+  </script>
 </body>
 </html>
+
