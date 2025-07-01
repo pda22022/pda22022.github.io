@@ -66,7 +66,7 @@
               animation-mixer="clip: *; loop: repeat"
               testing
               position="10 0 0"
-              alongpath="curve: #path; dur: 15000; loop: true; rotate: true">
+              random-walk>
     </a-entity>
 
     <!-- Κυκλική διαδρομή -->
@@ -80,7 +80,41 @@
       <a-curve-point position="10 0 0"></a-curve-point>
     </a-curve>
 
-    <!-- Δέντρα -->
+
+    <script>
+  AFRAME.registerComponent('random-walk', {
+    schema: {
+      speed: { type: 'number', default: 0.05 },
+      interval: { type: 'number', default: 3000 } // ms
+    },
+    init: function () {
+      this.direction = new THREE.Vector3();
+      this.pickNewDirection();
+      this.lastTime = 0;
+    },
+    tick: function (time, delta) {
+      if (time - this.lastTime > this.data.interval) {
+        this.pickNewDirection();
+        this.lastTime = time;
+      }
+
+      let pos = this.el.object3D.position;
+      pos.x += this.direction.x * this.data.speed * delta;
+      pos.z += this.direction.z * this.data.speed * delta;
+
+      // Optional: περιστροφή προς την κατεύθυνση
+      const angle = Math.atan2(this.direction.x, this.direction.z);
+      this.el.object3D.rotation.y = angle;
+    },
+    pickNewDirection: function () {
+      const angle = Math.random() * 2 * Math.PI;
+      this.direction.set(Math.sin(angle), 0, Math.cos(angle));
+    }
+  });
+</script>
+
+
+   
     <script>
       var scene1 = document.getElementById('s1');
       var treeCount = 40;
