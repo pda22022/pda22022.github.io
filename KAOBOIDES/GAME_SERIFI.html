@@ -1,10 +1,10 @@
-<html>
+<html>More actions
 <head>
   <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
 
   <script>
-    // Component για ενεργοποίηση animation με κλικ
+    // Component for activating animation on click
     AFRAME.registerComponent('testing', {
       init: function () {
         this.el.addEventListener('click', e => {
@@ -13,56 +13,30 @@
       }
     });
 
-    // Component για τυχαία κίνηση με ομαλή περιστροφή
+    // Component for random movement with avoidance of repeating direction
+    // Component for random movement with direction-facing
     AFRAME.registerComponent('random-walk', {
       schema: {
         speed: { type: 'number', default: 0.02 },
         interval: { type: 'int', default: 3000 },
-        boundary: { type: 'vec2', default: { x: 50, y: 50 } },
-        turnSpeed: { type: 'number', default: 0.05 } // πόσο γρήγορα γυρίζει (0-1)
+        boundary: { type: 'vec2', default: { x: 50, y: 50 } }
       },
       init: function () {
         this.direction = new THREE.Vector3();
-        this.currentRotation = 0; // σε μοίρες
-        this.targetRotation = 0; // σε μοίρες
         this.pickNewDirection();
         this.lastTime = 0;
+        this.lastAngle = null;
       },
       tick: function (time, timeDelta) {
         if (!this.lastTime || time - this.lastTime > this.data.interval) {
           this.pickNewDirection();
           this.lastTime = time;
         }
-
-        // Ομαλή περιστροφή προς targetRotation
-        let rotationDiff = this.targetRotation - this.currentRotation;
-
-        // Normalize γωνία για να είναι μεταξύ -180 και 180 μοίρες
-        rotationDiff = ((rotationDiff + 180) % 360) - 180;
-
-        // Υπολογισμός μικρού βήματος περιστροφής
-        const turnStep = this.data.turnSpeed * timeDelta;
-
-        if (Math.abs(rotationDiff) < turnStep) {
-          this.currentRotation = this.targetRotation;
-        } else {
-          this.currentRotation += turnStep * Math.sign(rotationDiff);
-          this.currentRotation = (this.currentRotation + 360) % 360; // Κράτησε εντός [0,360)
-        }
-
-        // Εφαρμογή περιστροφής
-        this.el.object3D.rotation.y = THREE.Math.degToRad(this.currentRotation);
-
-        // Κίνηση προς την κατεύθυνση
         let pos = this.el.object3D.position;
-        let rad = THREE.Math.degToRad(this.currentRotation);
-        let dx = Math.sin(rad) * this.data.speed * timeDelta;
-        let dz = Math.cos(rad) * this.data.speed * timeDelta;
+        let newX = pos.x + this.direction.x * this.data.speed * timeDelta;
+        let newZ = pos.z + this.direction.z * this.data.speed * timeDelta;
 
-        let newX = pos.x + dx;
-        let newZ = pos.z + dz;
-
-        // Έλεγχος ορίων
+        // boundary check
         if (Math.abs(newX) < this.data.boundary.x && Math.abs(newZ) < this.data.boundary.y) {
           this.el.object3D.position.set(newX, pos.y, newZ);
         } else {
@@ -70,9 +44,17 @@
         }
       },
       pickNewDirection: function () {
-        let newAngle = Math.random() * 360;
-        // Μπορείς να προσθέσεις περιορισμούς στο πού γυρνάει εδώ αν θέλεις
-        this.targetRotation = newAngle;
+        let angle;
+        do {
+          angle = Math.random() * 2 * Math.PI;
+        } while (this.lastAngle !== null && Math.abs(angle - this.lastAngle) < Math.PI / 4);
+
+        this.lastAngle = angle;
+        this.direction.set(Math.sin(angle), 0, Math.cos(angle));
+
+        // Rotate to face direction
+        const rotationY = THREE.MathUtils.radToDeg(angle);
+        this.el.object3D.rotation.y = rotationY;
       }
     });
   </script>
@@ -123,22 +105,25 @@
     <a-entity gltf-model="#building" scale="50 50 50" position="15 0.9 20" rotation="0 -180 0"></a-entity>
     <a-entity gltf-model="#building" scale="50 50 50" position="30 0.9 20" rotation="0 -180 0"></a-entity>
 
-    <!-- Χαρακτήρας που κινείται τυχαία με ομαλή περιστροφή -->
+    <!-- Χαρακτήρας που κινείται τυχαία -->
     <a-entity id="runner"
               gltf-model="#Running"
               scale="0.3 0.3 0.3"
               animation-mixer="clip: *; loop: repeat"
               testing
               position="10 0 0"
-              random-walk="speed: 0.02; interval: 4000; boundary: 50 50; turnSpeed: 0.1">
+              random-walk="speed: 0.01; interval: 5000; boundary: 20 20">
+              random-walk="speed: 0.02; interval: 4000; boundary: 50 10">
     </a-entity>
 
     <!-- Δέντρα -->
     <script>
       var scene1 = document.getElementById('s1');
       var treeCount = 40;
+      var treeCount = 100;
       var innerRadius = 60;
       var outerRadius = 80;
+      var outerRadius = 200;
 
       for (var i = 0; i < treeCount; i++) {
         var tree = document.createElement('a-entity');
