@@ -15,6 +15,15 @@
   
  <script>
   AFRAME.registerComponent('random-walk', {
+    pickNewDirection: function () {
+  let angle;
+  do {
+    angle = Math.random() * 2 * Math.PI;
+  } while (Math.abs(angle - this.lastAngle) < Math.PI / 4); // Απόφυγε σχεδόν ίδιες
+  this.lastAngle = angle;
+  this.direction.set(Math.sin(angle), 0, Math.cos(angle));
+}
+
     schema: {
       speed: { type: 'number', default: 0.05 },
       interval: { type: 'number', default: 3000 },
