@@ -13,29 +13,28 @@
   init: function () {
     this.direction = new THREE.Vector3();
     this.pickNewDirection();
-    this.lastTime = 0;
+    this.lastChange = 0;
     this.previousPosition = this.el.object3D.position.clone();
     this.lastAngle = null;
   },
   tick: function (time, timeDelta) {
-    if (!this.lastTime || time - this.lastTime > this.data.interval) {
-      // Αποθήκευση προηγούμενης θέσης πριν αλλάξει κατεύθυνση
+    if (!this.lastChange || time - this.lastChange > this.data.interval) {
       this.previousPosition.copy(this.el.object3D.position);
       this.pickNewDirection();
-      this.lastTime = time;
+      this.lastChange = time;
     }
 
     const pos = this.el.object3D.position;
     const movement = this.direction.clone().multiplyScalar(this.data.speed * timeDelta);
-    const newPos = pos.clone().add(movement);
+    const nextPos = pos.clone().add(movement);
 
-    // έλεγχος αν είναι εντός ορίων
-    if (Math.abs(newPos.x) < this.data.boundary.x && Math.abs(newPos.z) < this.data.boundary.y) {
-      this.el.object3D.position.copy(newPos);
+    // Έλεγχος αν παραμένει εντός ορίων
+    if (Math.abs(nextPos.x) < this.data.boundary.x && Math.abs(nextPos.z) < this.data.boundary.y) {
+      this.el.object3D.position.copy(nextPos);
     } else {
-      // Αν βγει εκτός ορίων, επιλέγει νέα κατεύθυνση χωρίς τηλεμεταφορά
-      this.previousPosition.copy(pos);
+      // Αν πρόκειται να βγει εκτός, αλλάζει κατεύθυνση χωρίς να κάνει teleport
       this.pickNewDirection();
+      this.lastChange = time;
     }
   },
   pickNewDirection: function () {
@@ -45,21 +44,20 @@
     } while (this.lastAngle !== null && Math.abs(angle - this.lastAngle) < Math.PI / 4);
 
     this.lastAngle = angle;
-    this.direction.set(Math.sin(angle), 0, Math.cos(angle));
+    this.direction.set(Math.sin(angle), 0, Math.cos(angle)).normalize();
 
+    // Περιστροφή χαρακτήρα προς την κατεύθυνση
     const rotationY = THREE.MathUtils.radToDeg(angle);
 
-    // Καθαρισμός προηγούμενου animation
     this.el.removeAttribute('animation__rotate');
     this.el.setAttribute('animation__rotate', {
       property: 'rotation',
       to: `0 ${rotationY} 0`,
-      dur: 1000,
-      easing: 'easeInOutQuad'
+      dur: 500,
+      easing: 'easeInOutSine'
     });
   }
 });
-
   </script>
 
   <style>
@@ -122,7 +120,7 @@
 
     <a-entity id="runner2"
               gltf-model="#Running2"
-              scale="0.3 0.3 0.3"
+              scale="0.5 0.5 0.5"
               animation-mixer="clip: *; loop: repeat"
               testing
               position="3 0 0"
@@ -134,7 +132,7 @@
               scale="0.3 0.3 0.3"
               animation-mixer="clip: *; loop: repeat"
               testing
-              position="5 0.5 0"
+              position="5 0 0"
               random-walk="speed: 0.005; interval: 10000; boundary: 50 50">
     </a-entity>
 
