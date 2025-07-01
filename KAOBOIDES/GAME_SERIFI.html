@@ -66,7 +66,7 @@
               animation-mixer="clip: *; loop: repeat"
               testing
               position="10 0 0"
-              random-walk>
+              random-walk="speed: 0.05; interval: 3000; boundary: 70 70">
     </a-entity>
 
     <!-- Κυκλική διαδρομή -->
@@ -81,11 +81,12 @@
     </a-curve>
 
 
-    <script>
+ <script>
   AFRAME.registerComponent('random-walk', {
     schema: {
       speed: { type: 'number', default: 0.05 },
-      interval: { type: 'number', default: 3000 } // ms
+      interval: { type: 'number', default: 3000 },
+      boundary: { type: 'vec2', default: { x: 50, y: 50 } } // x = όριο X, y = όριο Z
     },
     init: function () {
       this.direction = new THREE.Vector3();
@@ -98,28 +99,41 @@
         this.lastTime = time;
       }
 
-      let pos = this.el.object3D.position;
-      pos.x += this.direction.x * this.data.speed * delta;
-      pos.z += this.direction.z * this.data.speed * delta;
+      const pos = this.el.object3D.position;
+      const newX = pos.x + this.direction.x * this.data.speed * delta;
+      const newZ = pos.z + this.direction.z * this.data.speed * delta;
 
-      // Optional: περιστροφή προς την κατεύθυνση
+      // Έλεγχος ορίων
+      const maxX = this.data.boundary.x;
+      const maxZ = this.data.boundary.y;
+
+      if (Math.abs(newX) > maxX || Math.abs(newZ) > maxZ) {
+        this.pickNewDirection(true); // αλλάζει κατεύθυνση αν βγει
+        return;
+      }
+
+      pos.x = newX;
+      pos.z = newZ;
+
+      // Στρέφεται προς την κατεύθυνση
       const angle = Math.atan2(this.direction.x, this.direction.z);
       this.el.object3D.rotation.y = angle;
     },
-    pickNewDirection: function () {
-      const angle = Math.random() * 2 * Math.PI;
+    pickNewDirection: function (forceTurn = false) {
+      let angle = Math.random() * 2 * Math.PI;
+      if (forceTurn) {
+        angle += Math.PI; // περίπου αντίθετη κατεύθυνση αν βγει εκτός
+      }
       this.direction.set(Math.sin(angle), 0, Math.cos(angle));
     }
   });
 </script>
 
-
-   
     <script>
       var scene1 = document.getElementById('s1');
-      var treeCount = 40;
+      var treeCount = 100;
       var innerRadius = 60;
-      var outerRadius = 80;
+      var outerRadius = 200;
 
       for (var i = 0; i < treeCount; i++) {
         var tree = document.createElement('a-entity');
