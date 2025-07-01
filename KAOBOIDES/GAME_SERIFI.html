@@ -14,7 +14,7 @@
       }
     });
 
-    // Component for random movement with avoidance of repeating direction
+    // Component for random movement with direction-facing
     AFRAME.registerComponent('random-walk', {
       schema: {
         speed: { type: 'number', default: 0.02 },
@@ -51,6 +51,10 @@
 
         this.lastAngle = angle;
         this.direction.set(Math.sin(angle), 0, Math.cos(angle));
+
+        // Rotate to face direction
+        const rotationY = THREE.MathUtils.radToDeg(angle);
+        this.el.object3D.rotation.y = rotationY;
       }
     });
   </script>
@@ -108,15 +112,15 @@
               animation-mixer="clip: *; loop: repeat"
               testing
               position="10 0 0"
-              random-walk="speed: 0.01; interval: 5000; boundary: 20 20">
+              random-walk="speed: 0.02; interval: 4000; boundary: 50 10">
     </a-entity>
 
     <!-- Δέντρα -->
     <script>
       var scene1 = document.getElementById('s1');
-      var treeCount = 40;
+      var treeCount = 100;
       var innerRadius = 60;
-      var outerRadius = 80;
+      var outerRadius = 200;
 
       for (var i = 0; i < treeCount; i++) {
         var tree = document.createElement('a-entity');
