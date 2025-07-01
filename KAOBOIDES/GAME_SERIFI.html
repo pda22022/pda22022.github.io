@@ -14,18 +14,18 @@
  </script>
   
  <script>
-  AFRAME.registerComponent('random-walk', {
-    pickNewDirection: function () {
-  let angle;
-  do {
-    angle = Math.random() * 2 * Math.PI;
-  } while (Math.abs(angle - this.lastAngle) < Math.PI / 4); // Απόφυγε σχεδόν ίδιες
-  this.lastAngle = angle;
-  this.direction.set(Math.sin(angle), 0, Math.cos(angle));
-}
+    AFRAME.registerComponent('testing', {
+      init: function () {
+        this.el.addEventListener('click', e => {
+          this.el.setAttribute('animation-mixer', { timeScale: 1 });
+        });
+      }
+    });
 
-    schema: {
-      speed: { type: 'number', default: 0.05 },
+   
+  AFRAME.registerComponent('random-walk', {
+      schema: {
+      speed: { type: 'number', default: 0.02 },
       interval: { type: 'number', default: 3000 },
       boundary: { type: 'vec2', default: { x: 50, y: 50 } } // x = όριο X, y = όριο Z
     },
@@ -127,7 +127,7 @@
               animation-mixer="clip: *; loop: repeat"
               testing
               position="10 0 0"
-              random-walk="speed: 0.03; interval: 8000; boundary: 20 20">
+              random-walk="speed: 0.02; interval: 5000; boundary: 20 20">
     </a-entity>
 
     <!-- Κυκλική διαδρομή -->
