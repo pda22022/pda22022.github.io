@@ -4,59 +4,69 @@
   <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
 
   <script>
-    // Component for activating animation on click
-    AFRAME.registerComponent('testing', {
-      init: function () {
-        this.el.addEventListener('click', e => {
-          this.el.setAttribute('animation-mixer', { timeScale: 1 });
-        });
-      }
-    });
+     AFRAME.registerComponent('testing', {
+    init: function () {
+      this.el.addEventListener('click', e => {
+        this.el.setAttribute('animation-mixer', { timeScale: 1 });
+      });
+    }
+  });
 
-    // Component for random movement with avoidance of repeating direction
-    // Component for random movement with direction-facing
-    AFRAME.registerComponent('random-walk', {
-      schema: {
-        speed: { type: 'number', default: 0.02 },
-        interval: { type: 'int', default: 3000 },
-        boundary: { type: 'vec2', default: { x: 50, y: 50 } }
-      },
-      init: function () {
-        this.direction = new THREE.Vector3();
+  // Component for random movement with smooth rotation
+  AFRAME.registerComponent('random-walk', {
+    schema: {
+      speed: { type: 'number', default: 0.02 },
+      interval: { type: 'int', default: 3000 },
+      boundary: { type: 'vec2', default: { x: 50, y: 50 } }
+    },
+    init: function () {
+      this.direction = new THREE.Vector3();
+      this.pickNewDirection();
+      this.lastTime = 0;
+      this.lastAngle = null;
+    },
+    tick: function (time, timeDelta) {
+      if (!this.lastTime || time - this.lastTime > this.data.interval) {
         this.pickNewDirection();
-        this.lastTime = 0;
-        this.lastAngle = null;
-      },
-      tick: function (time, timeDelta) {
-        if (!this.lastTime || time - this.lastTime > this.data.interval) {
-          this.pickNewDirection();
-          this.lastTime = time;
-        }
-        let pos = this.el.object3D.position;
-        let newX = pos.x + this.direction.x * this.data.speed * timeDelta;
-        let newZ = pos.z + this.direction.z * this.data.speed * timeDelta;
-
-        // boundary check
-        if (Math.abs(newX) < this.data.boundary.x && Math.abs(newZ) < this.data.boundary.y) {
-          this.el.object3D.position.set(newX, pos.y, newZ);
-        } else {
-          this.pickNewDirection();
-        }
-      },
-      pickNewDirection: function () {
-        let angle;
-        do {
-          angle = Math.random() * 2 * Math.PI;
-        } while (this.lastAngle !== null && Math.abs(angle - this.lastAngle) < Math.PI / 4);
-
-        this.lastAngle = angle;
-        this.direction.set(Math.sin(angle), 0, Math.cos(angle));
-
-        // Rotate to face direction
-        const rotationY = THREE.MathUtils.radToDeg(angle);
-        this.el.object3D.rotation.y = rotationY;
+        this.lastTime = time;
       }
-    });
+
+      let pos = this.el.object3D.position;
+      let newX = pos.x + this.direction.x * this.data.speed * timeDelta;
+      let newZ = pos.z + this.direction.z * this.data.speed * timeDelta;
+
+      // boundary check
+      if (Math.abs(newX) < this.data.boundary.x && Math.abs(newZ) < this.data.boundary.y) {
+        this.el.object3D.position.set(newX, pos.y, newZ);
+      } else {
+        this.pickNewDirection();
+      }
+    },
+    pickNewDirection: function () {
+      let angle;
+      do {
+        angle = Math.random() * 2 * Math.PI;
+      } while (this.lastAngle !== null && Math.abs(angle - this.lastAngle) < Math.PI / 4);
+
+      this.lastAngle = angle;
+      this.direction.set(Math.sin(angle), 0, Math.cos(angle));
+
+      // Rotate smoothly to new direction
+      const rotationY = THREE.MathUtils.radToDeg(angle);
+
+      // Remove existing rotation animation if any
+      if (this.el.getAttribute('animation__rotate')) {
+        this.el.removeAttribute('animation__rotate');
+      }
+
+      this.el.setAttribute('animation__rotate', {
+        property: 'rotation',
+        to: `0 ${rotationY} 0`,
+        dur: 1000,
+        easing: 'easeInOutQuad'
+      });
+    }
+  });
   </script>
 
   <style>
@@ -113,7 +123,7 @@
               animation-mixer="clip: *; loop: repeat"
               testing
               position="1 0 0"
-              random-walk="speed: 0.03; interval: 7000; boundary: 100 100">
+              random-walk="speed: 0.05; interval: 7000; boundary: 70 70">
     </a-entity>
 
     <a-entity id="runner"
@@ -122,7 +132,7 @@
               animation-mixer="clip: *; loop: repeat"
               testing
               position="5 0 0"
-              random-walk="speed: 0.03; interval: 7000; boundary: 100 100">
+              random-walk="speed: 0.05; interval: 7000; boundary: 70 70">
     </a-entity>
 
     <!-- Δέντρα -->
