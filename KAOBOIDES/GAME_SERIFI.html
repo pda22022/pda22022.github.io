@@ -164,5 +164,24 @@
           var x = Math.cos(angle) * radius;
           var z = Math.sin(angle) * radius;
           var s = 0.1;
-          var r = Math.random
+          var r = Math.random() * 180 - 90;
+
+          tree.setAttribute('gltf-model', '#tree');
+          tree.setAttribute('position', `${x} 0 ${z}`);
+          tree.setAttribute('scale', `${s} ${s} ${s}`);
+          tree.setAttribute('rotation', `0 ${r} 0`);
+          tree.setAttribute('shadow', 'receive: false');
+
+          scene1.appendChild(tree);
+        }
+      </script>
+    </a-scene>
+  </div>
+
+  <hr />
+  <p><strong>Οδηγίες:</strong> Πλησίασε και στόχευσε τους χαρακτήρες για να τους "χτυπήσεις"!</p>
+  <hr />
+  <p><strong>Credits:</strong></p>
+</body>
+</html>
 
