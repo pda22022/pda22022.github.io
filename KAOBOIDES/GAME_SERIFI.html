@@ -93,6 +93,7 @@
       <a-asset-item id="building" src="western_building.glb"></a-asset-item>
       <a-asset-item id="tobacco" src="western_tobacco.glb"></a-asset-item>
       <a-asset-item id="Running" src="Running.glb"></a-asset-item>
+      <a-asset-item id="Running2" src="Running2.glb"></a-asset-item>
     </a-assets>
 
     <!-- Κτίρια -->
@@ -111,8 +112,17 @@
               scale="0.3 0.3 0.3"
               animation-mixer="clip: *; loop: repeat"
               testing
-              position="10 0 0"
-              random-walk="speed: 0.03; interval: 7000; boundary: 60 30">
+              position="1 0 0"
+              random-walk="speed: 0.03; interval: 7000; boundary: 100 100">
+    </a-entity>
+
+    <a-entity id="runner"
+              gltf-model="#Running2"
+              scale="0.3 0.3 0.3"
+              animation-mixer="clip: *; loop: repeat"
+              testing
+              position="5 0 0"
+              random-walk="speed: 0.03; interval: 7000; boundary: 100 100">
     </a-entity>
 
     <!-- Δέντρα -->
