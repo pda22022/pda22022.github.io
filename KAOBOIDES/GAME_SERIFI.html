@@ -64,23 +64,23 @@
         this.el.addEventListener('mouseenter', () => {
           if (!this.el.getAttribute('visible')) return;
 
-          // Flash effect
+         
           const flash = document.createElement('a-entity');
           flash.setAttribute('light', 'type: point; color: yellow; intensity: 3; distance: 10; decay: 2');
           flash.setAttribute('position', this.el.getAttribute('position'));
           this.el.sceneEl.appendChild(flash);
 
-          setTimeout(() => flash.remove(), 100); // remove light
+          setTimeout(() => flash.remove(), 100); 
 
-          // Hide character
+         
           this.el.setAttribute('visible', 'false');
 
-          // Update score
+          
           score++;
           const scoreText = document.querySelector('#scoreText');
           scoreText.setAttribute('text', `value: Σκορ: ${score} / ${totalTargets}`);
 
-          // Optional: Game won message
+       
           if (score === totalTargets) {
             scoreText.setAttribute('text', `value: Τελικό Σκορ: ${score} / ${totalTargets} - Νίκη!`);
           }
@@ -131,7 +131,6 @@
       <a-light type="ambient" intensity="0.25"></a-light>
       <a-plane color="PaleGoldenrod" static-body height="1000" width="1000" rotation="-90 0 0"></a-plane>
 
-      <!-- Κτίρια -->
       <a-entity gltf-model="#bank" scale="2 2 2" position="-1 -0.4 -20"></a-entity>
       <a-entity gltf-model="#building" scale="50 50 50" position="-35 0.9 -20"></a-entity>
       <a-entity gltf-model="#tobacco" scale="3 3 3" position="-20 -0.2 -20" rotation="0 -90 0"></a-entity>
@@ -141,7 +140,6 @@
       <a-entity gltf-model="#building" scale="50 50 50" position="15 0.9 20" rotation="0 -180 0"></a-entity>
       <a-entity gltf-model="#building" scale="50 50 50" position="30 0.9 20" rotation="0 -180 0"></a-entity>
 
-      <!-- Χαρακτήρες -->
       <a-entity gltf-model="#Running" scale="0.3 0.3 0.3" animation-mixer random-walk target-character position="5 0 -5"></a-entity>
       <a-entity gltf-model="#Running" scale="0.3 0.3 0.3" animation-mixer random-walk target-character position="-5 0 -10"></a-entity>
       <a-entity gltf-model="#Running" scale="0.3 0.3 0.3" animation-mixer random-walk target-character position="10 0 -15"></a-entity>
@@ -150,7 +148,6 @@
       <a-entity gltf-model="#Running" scale="0.3 0.3 0.3" animation-mixer random-walk target-character position="-15 0 -10"></a-entity>
       <a-entity gltf-model="#Running" scale="0.3 0.3 0.3" animation-mixer random-walk target-character position="0 0 -25"></a-entity>
 
-      <!-- Δέντρα -->
       <script>
         var scene1 = document.getElementById('s1');
         var treeCount = 100;
@@ -185,9 +182,6 @@
     https://sketchfab.com/3d-models/old-western-bank-with-interior-low-poly-e55eb272bc1440bf93e5dc10ccf73698 https://sketchfab.com/3d-models/western-church-mobile-gameready-64f89f8e3e0348d493925a257a9baf0d
      https://sketchfab.com/3d-models/western-normal-mobile-gameready-5e9121dc2dfe4421bb29a7f345560f11 https://sketchfab.com/3d-models/low-poly-western-watertower-26d406d97898452f974657d2d2ff4189
       https://sketchfab.com/3d-models/western-tobacco-store-7e42192518f649a682b296e13c64a1bc</p>
-
-
-  
 </body>
 </html>
 
